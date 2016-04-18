@@ -1,6 +1,6 @@
 # Introduction
 
-This project contains Dockerfiles that power `apporz.com` -- my personal website.
+This project contains Dockerfiles that power `www.sndnvaps.com` -- my personal website.
 I want to share my ideas and designs about Web-Deploying using Docker with you.
 
 # Structure
@@ -15,6 +15,11 @@ The whole app is divided into four Containers:
 If necessary, it will connect to `MySQL` server as well.
 4. Considering the flexibility and security, `MySQL` server must be independent of other containers.
 
+
+# Before build the wordpress blog 
+
+ You should change the `MYSQL_PASSWORD` in [conf.sh](www/conf.sh) to match MYSQL_ROOT_PASSWORD=my-secret-pw
+
 # Build and Run
 
 ### Build Images
@@ -23,7 +28,6 @@ At first, you should have had [Docker](https://docs.docker.com) installed.
 
     # Add https(SSL) support 
     # before build the Nginx Image , you should put your server.crt(or server.pem) , server.key to ./ca folder 
-    #  you should change the MYSQL_PASSWORD in [conf.sh](www/conf.sh) to match MYSQL_ROOT_PASSWORD=my-secret-pw
     # build Nginx Image
     $ sudo docker build --tag sndnvaps/nginx -f nginx/Dockerfile .
     
@@ -61,7 +65,8 @@ The first two of which can be exchanged.
     # Run Nginx Container
     # enable sshd for ssh connect
     # connect ->$ ssh admin@localhost -p 5002
-    $ sudo docker run --name nginx -p 80:80 -p 443:443 -p 5002:22 --volumes-from wordpress --link php-fpm:fpmservice -d sndnvaps/nginx
+    # you can enalbe ssh just add -p 5002:22 
+    $ sudo docker run --name nginx -p 80:80 -p 443:443  --volumes-from wordpress --link php-fpm:fpmservice -d sndnvaps/nginx
     # see https://github.com/docker-library/docs/tree/master/nginx
     
 
