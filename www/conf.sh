@@ -11,7 +11,7 @@
 # DB_PASSWORD=`pwgen -c -n -s -1 12`
 
 MYSQL_USER="root"
-MYSQL_PASSWORD="447826004"
+MYSQL_PASSWORD="change_it_to_match_MYSQL_ROOT_PASSWORD"
 MYSQL_HOST="mysql"
 
 WORDPRESS_DB="wordpress"
