@@ -56,7 +56,7 @@ The first two of which can be exchanged.
     # see https://github.com/docker-library/docs/tree/master/mysql
     
     # Run WWW Container
-    $ sudo docker run --name wordpress --link mysql:mysql -d sndnvaps/www
+    $ sudo docker run --name wordpress --link mysql:mysql -d sndnvaps/wordpress
     
     # Run PHP-FPM Container
     $ sudo docker run --name php-fpm --volumes-from wordpress --link mysql:mysql -d sndnvaps/php-fpm
