@@ -23,7 +23,7 @@ At first, you should have had [Docker](https://docs.docker.com) installed.
 
     # Add https(SSL) support 
     # before build the Nginx Image , you should put your server.crt(or server.pem) , server.key to ./ca folder 
-    
+    #  you should change the MYSQL_PASSWORD in [conf.sh](www/conf.sh) to match MYSQL_ROOT_PASSWORD=my-secret-pw
     # build Nginx Image
     $ sudo docker build --tag sndnvaps/nginx -f nginx/Dockerfile .
     
@@ -52,18 +52,16 @@ The first two of which can be exchanged.
     # see https://github.com/docker-library/docs/tree/master/mysql
     
     # Run WWW Container
-    # enable sshd for ssh connect
-    # connect ->$ ssh admin@localhost -p 5001 
-    $ sudo docker run --name www -p 5001:22 -d sndnvaps/www
+    $ sudo docker run --name wordpress --link mysql:mysql -d sndnvaps/www
     
     # Run PHP-FPM Container
-    $ sudo docker run --name php-fpm --volumes-from www --link mysql:mysql -d sndnvaps/php-fpm
+    $ sudo docker run --name php-fpm --volumes-from wordpress --link mysql:mysql -d sndnvaps/php-fpm
     # see https://github.com/docker-library/docs/tree/master/php
     
     # Run Nginx Container
     # enable sshd for ssh connect
     # connect ->$ ssh admin@localhost -p 5002
-    $ sudo docker run --name nginx -p 80:80 -p 443:443 -p 5002:22 --volumes-from www --link php-fpm:fpmservice -d sndnvaps/nginx
+    $ sudo docker run --name nginx -p 80:80 -p 443:443 -p 5002:22 --volumes-from wordpress --link php-fpm:fpmservice -d sndnvaps/nginx
     # see https://github.com/docker-library/docs/tree/master/nginx
     
 
@@ -84,7 +82,7 @@ You must stop the contaners in the following sequence:
 CONTAINER ID        IMAGE                     COMMAND                CREATED              STATUS              PORTS                                      NAMES
 93a5574fa67a        sndnvaps/nginx:latest     "nginx -g 'daemon of   4 seconds ago        Up 3 seconds        0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp   nginx               
 4d6690e1bc39        sndnvaps/php-fpm:latest   "php-fpm"              23 seconds ago       Up 22 seconds       9000/tcp                                   php-fpm             
-1cd4d1fd86b8        sndnvaps/www:latest       "/bin/sh -c /conf.sh   41 seconds ago       Up 40 seconds                                                  www                 
+1cd4d1fd86b8        sndnvaps/wordpress:latest       "/bin/sh -c /conf.sh   41 seconds ago       Up 40 seconds                                                  www                 
 76d8d9fb5136        mysql:latest              "docker-entrypoint.s   About a minute ago   Up About a minute   0.0.0.0:3306->3306/tcp                     mysql    
 
 ```

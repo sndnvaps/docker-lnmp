@@ -3,7 +3,7 @@ MAINTAINER sndnvaps <sndnvaps@gmail.com>
 
 # Basic Requirements
 RUN apt-get update
-RUN apt-get install -y pwgen curl git unzip ssh openssh-server sqlite3 vim sudo
+RUN apt-get install -y pwgen curl git unzip ssh openssh-server sqlite3 vim sudo mysql-client
 # RUN apt-get install -y php5-cli 
 
 # The following installation is base on your own applications.
@@ -24,37 +24,14 @@ RUN apt-get install -y pwgen curl git unzip ssh openssh-server sqlite3 vim sudo
 # RUN npm install -g babel
 # RUN npm install -g uglify-js
 
-
-# Setup sshd 
-RUN sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
-#  add user admin, password admin
-RUN useradd admin
-RUN echo "admin:admin" | chpasswd
-RUN echo "admin   ALL=(ALL)       ALL" >> /etc/sudoers
-
-RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -y
-RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -y
-
-
-# Copy Application
-COPY www/app /www
+# setup wordpress
+ADD https://wordpress.org/latest.tar.gz /wordpress.tar.gz
+RUN tar xvzf /wordpress.tar.gz
+RUN mv /wordpress /www
+#COPY www/wordpress /www
 COPY www/conf.sh /conf.sh
-
-# Install TelegramImageBot for telegrambot 
-# RUN git clone https://github.com/sndnvaps/TelegramImageBot.git -b master /www/bot
-# RUN cd /www/bot && composer install 
-
-# Copy webhook.php && sethook.php to /www/bot
-# COPY www/telegrambot/*.php /www/bot/
-
-
-# run sshd
-RUN mkdir /var/run/sshd
-EXPOSE 22
-
+VOLUME ["/www"]
 RUN chmod 755 /conf.sh
 
-VOLUME ["/www"]
 
 CMD /conf.sh
-CMD ["/usr/sbin/sshd", "-D"]
