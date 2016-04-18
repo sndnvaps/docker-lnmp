@@ -31,7 +31,7 @@ At first, you should have had [Docker](https://docs.docker.com) installed.
     $ sudo docker build --tag sndnvaps/php-fpm -f php-fpm/Dockerfile .
     
     # build WWW Image
-    $ sudo docker build --tag sndnvaps/www -f www/Dockerfile .
+    $ sudo docker build --tag sndnvaps/wordpress -f www/Dockerfile .
     
     # pull MySQL Official Image
     $ sudo docker pull mysql:latest
