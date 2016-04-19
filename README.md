@@ -48,7 +48,26 @@ You must run the contaners in the following sequence:
 The first two of which can be exchanged.
 
     # Run MySQL Container
+------------------------------------------------------------------------------------
+    Mounting the database file volume
+
+In order to persist the database data, you can mount a local folder from the host on the container to store the database files. To do so:
+
+    docker run -d -p 5003:3306 --name mysql_datavolume  -v /path/in/host:/var/lib/mysql -e MYSQL_ROOT_PASSWORD="you_password_here" -d  mysql /bin/bash -c "/usr/sbin/mysqld --initialize --user=mysql"
+
+This will mount the local folder /path/in/host inside the docker in /var/lib/mysql (where MySQL will store the database files by default). <strong>mysqld --initialize --user=mysql</strong> creates the initial database structure.
+
+Remember that this will mean that your host must have /path/in/host available when you run your docker image!
+
+After this you can start your MySQL image, but this time using /path/in/host as the database folder:
+ ------------------------------------------------------------
+  
+    # not mount the data_volume from host 
+    
     $ sudo docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql
+    
+-------------------------------------------------------------------------------------------------
+
     # see https://github.com/docker-library/docs/tree/master/mysql
     
     # Run WWW Container
